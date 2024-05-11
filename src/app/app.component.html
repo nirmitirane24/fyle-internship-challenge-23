@@ -1,5 +1,25 @@
-<div class="grid h-screen place-items-center">
-  <div class="font-bold text-3xl">
-    Fyle Internship Challenge
+<div class="container">
+  <h1>Github Repository Viewer</h1>
+  <input type="text" placeholder="Enter Github Username" [(ngModel)]="username">
+  <button (click)="searchRepositories()">Search</button>
+
+  <div *ngIf="isLoading">
+    <img class="loading-image" src="assets/loader.gif" alt="Loading...">
+  </div>
+  <div *ngIf="!isLoading && repositories.length === 0">No repositories found.</div>
+
+  <ul *ngIf="repositories.length > 0">
+    <li *ngFor="let repo of repositories">
+      <a [href]="repo.html_url" target="_blank">{{ repo.name }}</a>
+      <span *ngIf="repo.topics">Topics: {{ repo.topics.join(', ') }}</span>
+    </li>
+  </ul>
+
+  <div *ngIf="pagination" class="pagination">
+    <select [(ngModel)]="pageSize" (change)="loadPage(1)">
+      <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+    </select>
+    <button [disabled]="currentPage === 1" (click)="loadPage(currentPage - 1)">Previous</button>
+    <button [disabled]="currentPage === totalPages" (click)="loadPage(currentPage + 1)">Next</button>
   </div>
 </div>
